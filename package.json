@@ -1,6 +1,6 @@
 {
   "name": "rbx-icons",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Automatically generates Roblox Studio's latest class icons as individual .png files",
   "main": "index.js",
   "scripts": {
