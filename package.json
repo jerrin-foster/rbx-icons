@@ -1,0 +1,18 @@
+{
+  "name": "rbx-icons",
+  "version": "1.0.0",
+  "description": "Automatically generates Roblox Studio's latest class icons as individual .png files",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "homepage": "https://github.com/muoshuu/rbx-icons",
+  "repository": "github:muoshuu/rbx-icons",
+  "author": "Muoshuu <admin@muoshuu.me",
+  "license": "ISC",
+  "dependencies": {
+    "jimp": "^0.13.0",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5"
+  }
+}

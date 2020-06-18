@@ -1,0 +1,1 @@
+export declare function generate(outputDir: string): { [className: string]: string }
