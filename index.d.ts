@@ -1,1 +1,1 @@
-export declare function generate(outputDir: string): { [className: string]: string }
+export declare function generate(outputDir: string): Promise<{ [className: string]: string }>
