@@ -3,7 +3,7 @@ export declare type ClassIconPaths = {
 }
 
 export declare type ClassIconIndex = {
-    [className: string]: string
+    [className: string]: number
 }
 
 export declare function generate(outputDir: string, iconIndex: ClassIconIndex): Promise<ClassIconPaths>
