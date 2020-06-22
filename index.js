@@ -1,23 +1,12 @@
 const fs = require('fs');
 const path = require('path');
-const request = require('request-promise');
 const https = require('https');
 
+const bent = require('bent');
 const slice = require('./slice');
 
-function download(url, to) {
-    return new Promise((resolve, reject) => {
-        let file = fs.createWriteStream(to);
-
-        https.get(url, res => {
-            res.pipe(file);
-
-            file.on('finish', () => {
-                file.close(); resolve();
-            })
-        }).on('error', reject);
-    })
-}
+const getJSON = bent('json');
+const getBuffer = bent('buffer');
 
 function generate(outputDir) {
     return new Promise((resolve, reject) => {
@@ -26,25 +15,28 @@ function generate(outputDir) {
         let sheetPath = path.join(outputDir, 'sheet.png');
 
         Promise.all([
-            request('https://raw.githubusercontent.com/RobloxAPI/build-archive/master/data/production/latest.json'),
-            request('https://reflection.rbx-api.xyz/icons')
+            getJSON('https://raw.githubusercontent.com/RobloxAPI/build-archive/master/data/production/latest.json'),
+            getJSON('https://reflection.rbx-api.xyz/icons')
+        ]).then(response => {
+            let version = response[0].GUID;
+            let index = response[1];
 
-        ]).then(bodies => {
-            let rbxVersion = JSON.parse(bodies[0]).GUID;
-            let iconIndex = JSON.parse(bodies[1]);
+            const sheetPath = path.join(outputDir, 'sheet.png');
 
-            download(`https://raw.githubusercontent.com/RobloxAPI/build-archive/master/data/production/builds/${rbxVersion}/ClassImages.png`, sheetPath).then(() => {
+            getBuffer(`https://raw.githubusercontent.com/RobloxAPI/build-archive/master/data/production/builds/${version}/ClassImages.png`).then(buffer => {
+                fs.writeFileSync(sheetPath, buffer);
+
                 slice(sheetPath, outputDir, 16, 16).then(() => {
-                    let pathIndex = {};
+                    let paths = {};
 
-                    for (let className in iconIndex) {
-                        pathIndex[className] = path.join(outputDir, iconIndex[className] + '.png');
+                    for (let className in index) {
+                        paths[className] = path.join(outputDir, index[className] + '.png');
                     }
 
-                    resolve(pathIndex);
-                }).catch(reject);
-            }).catch(reject);
-        }).catch(reject);
+                    resolve(paths);
+                })
+            })
+        })
     })
 }
 
